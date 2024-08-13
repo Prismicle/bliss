@@ -1,0 +1,7 @@
+command /GemTest [<integer>]:
+    trigger:
+        if arg-1 is 1:
+            give player brick with name "American Gem" with lore "Testy"
+            set {gem.type.%player%} to 1
+
+

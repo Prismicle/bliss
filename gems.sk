@@ -1,0 +1,52 @@
+every 20 ticks:
+    loop all players:
+        if {rightclick.timer.%loop-player%} is not set:
+            set {rightclick.timer.%loop-player%} to 0
+            set {shiftclick.timer.%loop-player%} to 0
+
+
+        send action bar "&cRight-Click: &f%{rightclick.timer.%loop-player%}% | &eShift Right-Click: &f%{shiftclick.timer.%loop-player%}%" to loop-player
+        
+        if {rightclick.timer.%loop-player%} is more than 0:
+            subtract 1 from {rightclick.timer.%loop-player%}
+            if {rightclick.timer.%loop-player%} is 1:
+                set {rightclick.timer.%loop-player%} to "Ready!"
+        if {shiftclick.timer.%loop-player%} is more than 0:
+            subtract 1 from {shiftclick.timer.%loop-player%}
+            if {shiftclick.timer.%loop-player%} is 1:
+                set {shiftclick.timer.%loop-player%} to "Ready!"
+        
+        if {shiftclick.ability.%loop-player%} is not 0:
+            remove 1 from {shiftclick.ability.%loop-player%}
+            if {shiftclick.ability.%loop-player%} is 0:
+                remove crossbow with name "&cGlock 17" from loop-player's inventory
+                send "&cGlock 17 has been taken!" to loop-player
+
+        
+
+        #passives
+        if {gem.type.%loop-player%} is 1:
+            apply infinite potion of slowness of tier 1 to the loop-player
+            apply infinite potion of saturation of tier 1 to the loop-player
+
+on right click:
+    if name of event-item is "American Gem":
+        if player is not sneaking:
+            if {rightclick.timer.%player%} = "Ready!":
+                set {rightclick.timer.%player%} to 300
+                give player 32 brick blocks
+                broadcast "&cAbility Used!"
+            else:
+                send "&cError: Gem is on cooldown!" to event-player
+        else:
+            if {shiftclick.timer.%player%} = "Ready!":
+                set {shiftclick.timer.%player%} to 420
+                give player crossbow of quick charge 4 with name "&cGlock 17" with lore "testy"
+                set {shiftclick.ability.%player%} to 120
+                send "&cGlock 17 has been given!" to event-player
+            else:
+                send "&cError: Gem is on cooldown!" to event-player
+
+on tool change:
+    if event-player's tool is a bow:
+        enchant player's tool with power 3
